@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Simple ToDo</string>
+
+    <string name="add">Add Item</string>
+    <string name="save">Save</string>
+    <string name="add_item">Add a new item...</string>
+
+    <string name="action_add">Add Item</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_clear">Clear</string>
+
+    <string name="edit_label">Edit Item</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="text_to_edit" />
+
+    <string name="cancel_button">Cancel</string>
+    <string name="save_button">Save</string>
+    <string name="return_result">Return</string>
+</resources>
