@@ -34,10 +34,12 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='/Users/clinton/Documents/GitHub/AndroidStudioProjects/SimpleToDo/simple-todo-walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-I've spent a few hours reading the Android SQLite Help page (https://developer.android.com/training/basics/data-storage/databases.html) and the CodePath SQLite Help page (http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) and trying to implement the first optional feature, persist data to a SQLite database instead of a file.  I haven't gotten it to work yet, but I'm leaving the SQLite-related files in the pre-work submission because I've been working on it and I'm still trying to figure it out (I removed the SQLite-related code from the two Activities to clean up the code for the submission). 
+I spent a few hours reading the Android SQLite Help page (https://developer.android.com/training/basics/data-storage/databases.html) and the CodePath SQLite Help page (http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) and trying to implement the first optional feature, persist data to a SQLite database instead of a file.
+
+I haven't gotten it to work yet, but I'm leaving the SQLite-related files in the pre-work submission because I've been working on it and I'm still trying to figure it out (I removed the SQLite-related code from the MainActivity and EditItemActivity to clean up the code for the submission). 
