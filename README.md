@@ -34,7 +34,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-![Demo](https://github.com/cbrownley/SimpleToDo/blob/master/simple-todo-walkthrough.gif)
+<img src='https://github.com/cbrownley/SimpleToDo/blob/master/simple-todo-walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -43,3 +43,19 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 I spent a few hours reading the Android SQLite Help page (https://developer.android.com/training/basics/data-storage/databases.html) and the CodePath SQLite Help page (http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) and trying to implement the first optional feature, persist data to a SQLite database instead of a file.
 
 I haven't gotten it to work yet, but I'm leaving the SQLite-related files in the pre-work submission because I've been working on it and I'm still trying to figure it out (I removed the SQLite-related code from the MainActivity and EditItemActivity to clean up the code for the submission). 
+
+## License
+
+    Copyright 2016 Clinton Brownley
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
