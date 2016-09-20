@@ -81,7 +81,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateArrayItems() {
-        readItems();
+        File filesDir = getFilesDir();
+        File file = new File(filesDir, "todo.txt");
+        boolean exists = file.exists();
+        if (file.exists() && file.isFile()) {
+            readItems();
+        } else {
+            todoItems = new ArrayList<String>();
+        }
+        //readItems();
         aToDoAdapter = new ArrayAdapter<String>(this,
                                                 android.R.layout.simple_list_item_1,
                                                 todoItems);
