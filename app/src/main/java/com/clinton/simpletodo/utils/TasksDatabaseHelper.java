@@ -1,4 +1,4 @@
-package com.clinton.simpletodo;
+package com.clinton.simpletodo.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,59 +8,62 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TasksDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "TasksDatabaseHelper";
 
     // Database Info
-    private static final String DATABASE_NAME = "tasksDatabase";
+    private static final String DATABASE_NAME = "tasksDatabase.db";
     private static final int DATABASE_VERSION = 1;
 
     // Table Name
-    private static final String TABLE_TASKS = "tasks";
+    // private static final String TABLE_TASKS = "tasks";
 
     // Task Table Columns
-    private static final String KEY_TASK_ID = "id";
-    private static final String KEY_TASK_TEXT = "text";
+    // private static final String KEY_TASK_ID = "id";
+    // private static final String KEY_TASK_TEXT = "text";
 
-    private static TasksDatabaseHelper sInstance;
+    public TasksDatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
-    public static synchronized TasksDatabaseHelper getInstance(Context context) {
+    //private static TasksDatabaseHelper sInstance;
+
+    //public static synchronized TasksDatabaseHelper getInstance(Context context) {
         // Use the application context, which will ensure that you
         // don't accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
-        if (sInstance == null) {
-            sInstance = new TasksDatabaseHelper(context.getApplicationContext());
-        }
-        return sInstance;
-    }
+    //    if (sInstance == null) {
+    //        sInstance = new TasksDatabaseHelper(context.getApplicationContext());
+    //    }
+    //    return sInstance;
+    //}
 
     /**
      * Constructor should be private to prevent direct instantiation.
      * Make a call to the static method "getInstance()" instead.
      */
-    private TasksDatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
+    //private TasksDatabaseHelper(Context context) {
+    //    super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    //}
 
     // Called when the database connection is being configured.
     // Configure database settings for things like foreign key support, write-ahead logging, etc.
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
-        db.setForeignKeyConstraintsEnabled(true);
+        //db.setForeignKeyConstraintsEnabled(true);
     }
 
     // Called when the database is created for the FIRST time.
     // If a database already exists on disk with the same DATABASE_NAME, this method will NOT be called.
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TASKS_TABLE = "CREATE TABLE " + TABLE_TASKS +
+        String CREATE_TASKS_TABLE = "CREATE TABLE " + TaskContract.TaskEntry.TABLE_NAME +
                 "(" +
-                KEY_TASK_ID + " INTEGER PRIMARY KEY," + // Define a primary key
-                KEY_TASK_TEXT + " TEXT" +
+                TaskContract.TaskEntry._ID + " INTEGER PRIMARY KEY," + // Define a primary key
+                TaskContract.TaskEntry.COLUMN_NAME_TITLE + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_TASKS_TABLE);
@@ -73,38 +76,30 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             // Simplest implementation is to drop all old tables and recreate them
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
+            db.execSQL("DROP TABLE IF EXISTS " + TaskContract.TaskEntry.TABLE_NAME);
             onCreate(db);
         }
     }
 
-
     public class Task {
-
-        private int id;
-
-        private String text;
-
-        public int getId() {
+        //public long id;
+        //public String text;
+        public long id;
+        public String text;
+        public long getId() {
             return id;
         }
-
-        public void setId(int id) {
+        public void setId(long id) {
             this.id = id;
         }
-
         public String getText() {
             return text;
         }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
+        public void setText(String text) { this.text = text; }
     }
 
     // Insert a task into the database
-    public void addTask(Task task) {
+    public void addTask(String task) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
@@ -113,13 +108,13 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             // The task might already exist in the database.
-            // long taskId = addOrUpdateTask(task.id);
+            //long taskId = addOrUpdateTask(task);
 
             ContentValues values = new ContentValues();
-            values.put(KEY_TASK_TEXT, task.text);
+            values.put(TaskContract.TaskEntry.COLUMN_NAME_TITLE, task);
 
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
-            db.insertOrThrow(TABLE_TASKS, null, values);
+            db.insertOrThrow(TaskContract.TaskEntry.TABLE_NAME, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to add post to database");
@@ -142,18 +137,18 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(KEY_TASK_TEXT, task.text);
+            values.put(TaskContract.TaskEntry.COLUMN_NAME_TITLE, task.text);
 
             // First try to update the task in case the task already exists in the database
             // This assumes task ids are unique
-            int rows = db.update(TABLE_TASKS, values, KEY_TASK_TEXT + "= ?", new String[]{task.text});
+            int rows = db.update(TaskContract.TaskEntry.TABLE_NAME, values, TaskContract.TaskEntry.COLUMN_NAME_TITLE + "= ?", new String[]{task.text});
 
             // Check if update succeeded
             if (rows == 1) {
                 // Get the primary key of the task we just updated
                 String tasksSelectQuery = String.format("SELECT %s FROM %s WHERE %s = ?",
-                        KEY_TASK_ID, TABLE_TASKS, KEY_TASK_TEXT);
-                Cursor cursor = db.rawQuery(tasksSelectQuery, new String[]{String.valueOf(task.text)});
+                        TaskContract.TaskEntry._ID, TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry.COLUMN_NAME_TITLE);
+                Cursor cursor = db.rawQuery(tasksSelectQuery, new String[]{String.valueOf(task.id)});
                 try {
                     if (cursor.moveToFirst()) {
                         taskId = cursor.getInt(0);
@@ -166,7 +161,7 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
                 }
             } else {
                 // task with this text did not already exist, so insert new task
-                taskId = db.insertOrThrow(TABLE_TASKS, null, values);
+                taskId = db.insertOrThrow(TaskContract.TaskEntry.TABLE_NAME, null, values);
                 db.setTransactionSuccessful();
             }
         } catch (Exception e) {
@@ -178,13 +173,13 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Get all tasks in the database
-    public List<Task> getAllTasks() {
-        List<Task> tasks = new ArrayList<>();
+    public ArrayList<String> getAllTasks() {
+        ArrayList<String> tasks = new ArrayList<>();
 
         // SELECT * FROM TASKS
         String TASKS_SELECT_QUERY =
                 String.format("SELECT * FROM %s",
-                        TABLE_TASKS);
+                        TaskContract.TaskEntry.TABLE_NAME);
 
         // "getReadableDatabase()" and "getWriteableDatabase()" return the same object (except under low
         // disk space scenarios)
@@ -193,9 +188,9 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Task newTask = new Task();
-                    newTask.text = cursor.getString(cursor.getColumnIndex(KEY_TASK_TEXT));
-                    tasks.add(newTask);
+                    //Task newTask = new Task();
+                    String taskText = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NAME_TITLE));
+                    tasks.add(taskText);
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -214,7 +209,7 @@ public class TasksDatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             // Order of deletions is important when foreign key relationships exist.
-            db.delete(TABLE_TASKS, null, null);
+            db.delete(TaskContract.TaskEntry.TABLE_NAME, null, null);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to delete all tasks");

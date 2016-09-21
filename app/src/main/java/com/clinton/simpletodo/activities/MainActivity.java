@@ -1,4 +1,4 @@
-package com.clinton.simpletodo;
+package com.clinton.simpletodo.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,6 +15,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.clinton.simpletodo.R;
+import com.clinton.simpletodo.utils.TasksDatabaseHelper;
 
 import org.apache.commons.io.FileUtils;
 
@@ -28,16 +32,24 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE = 20;
+    private static final String TAG = "TasksDatabaseHelper";
+
     ArrayList<String> todoItems;
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
 
+    private TasksDatabaseHelper databaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        populateArrayItems();
+        //populateArrayItems();
+
+        databaseHelper = new TasksDatabaseHelper(this);
+        populateArrayItemsFromDb();
+
         lvItems = (ListView) findViewById(R.id.lvItems);
         lvItems.setAdapter(aToDoAdapter);
         etEditText = (EditText) findViewById(R.id.etEditText);
@@ -56,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View item, int position, long id) {
                 String todoItemText = todoItems.get(position).toString();
-                launchEditView(todoItemText, position);
+                //launchEditView(todoItemText, position);
+                launchEditDialog(todoItemText, position);
             }
         });
 
@@ -67,6 +80,30 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("todoItem", todoItemText);
         i.putExtra("itemIndex", position);
         startActivityForResult(i, REQUEST_CODE);
+    }
+
+    public void launchEditDialog(String todoItemText, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Item");
+        final EditText input = new EditText(this);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                todoItems.set(position, preferredCase(input.getText().toString()));
+                //Collections.sort(todoItems);
+                writeItems();
+                //storeArrayVal(todoItems, getApplicationContext());
+                lvItems.setAdapter(aToDoAdapter);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -95,11 +132,44 @@ public class MainActivity extends AppCompatActivity {
                                                 todoItems);
     }
 
+    public void populateArrayItemsFromDb() {
+        TasksDatabaseHelper databaseHelper = new TasksDatabaseHelper(getApplicationContext());
+        todoItems = databaseHelper.getAllTasks();
+        aToDoAdapter = new ArrayAdapter<String>(this,
+                                                android.R.layout.simple_list_item_1,
+                                                todoItems);
+    }
+
     public void onAddItem(View view) {
         String task = preferredCase(etEditText.getText().toString());
         aToDoAdapter.add(task);
         etEditText.setText("");
-        writeItems();
+        //writeItems();
+
+        /*TasksDatabaseHelper databaseHelper = new TasksDatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(TaskContract.TaskEntry.COLUMN_NAME_TITLE, task);
+            db.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to add post to database");
+        } finally {
+            db.endTransaction();
+        } */
+
+        //TasksDatabaseHelper newTask = new TasksDatabaseHelper.Task();
+        //newTask.setText(task);
+        //TasksDatabaseHelper databaseHelper = new TasksDatabaseHelper(getApplicationContext());
+
+        databaseHelper.addTask(task);
+        Toast.makeText(getApplicationContext(), "New task added.", Toast.LENGTH_LONG).show();
+
+        //Task newTask = new Task();
+        //newTask.setText(preferredCase(etEditText.getText().toString()));
+        //databaseHelper.addTask(newTask);
     }
 
     private void readItems() {

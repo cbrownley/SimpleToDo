@@ -16,16 +16,17 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-* [ ] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
+* [X] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
 * [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
 * [ ] Add support for completion due dates for todo items (and display within listview item)
-* [ ] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
+* [X] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
 * [X] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 The following **additional** features are implemented:
 
-* [X] Splash screen on start up
+* [X] Keep soft keyboard down until user clicks in text area
+* [X] Customized splash screen on start up
 * [X] Additional Save and Cancel icons in the menu
 * [X] Sort list items
 * [X] Clear entire list
@@ -40,9 +41,14 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-I spent a few hours reading the Android SQLite Help page (https://developer.android.com/training/basics/data-storage/databases.html) and the CodePath SQLite Help page (http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) and trying to implement the first optional feature, persist data to a SQLite database instead of a file.
+Today I implemented two more of the optional features.  First, I added functionality to the "Add Item" button to persist new todo items into SQLite instead of a text file.  Now the app persists items added with this button to SQLite and displays the items on start up.  I haven't changed the edit and delete sections of code yet, so any edit and delete changes aren't reflected yet.  
 
-I haven't gotten it to work yet, but I'm leaving the SQLite-related files in the pre-work submission because I've been working on it and I'm still trying to figure it out (I removed the SQLite-related code from the MainActivity and EditItemActivity to clean up the code for the submission). 
+Second, I added functionality to use a DialogFragment instead of a new Activity for editing items.  In addition, I added code to keep the soft keyboard down/hidden until the user clicks in the text area to improve the user experience, and I changed the splash screen icon and background color to customize it a little bit more.
+
+Finally, I also organized my Activity files and Database/SQLite files into "activities" and "utils" subfolders to organize my code according to the Android Folder Structure.
+
+Older Notes:
+I spent a few hours reading the Android SQLite Help page (https://developer.android.com/training/basics/data-storage/databases.html) and the CodePath SQLite Help page (http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) and trying to implement the first optional feature, persist data to a SQLite database instead of a file.  I haven't gotten it to work yet, but I'm leaving the SQLite-related files in the pre-work submission because I've been working on it and I'm still trying to figure it out (I removed the SQLite-related code from the MainActivity and EditItemActivity to clean up the code for the submission). 
 
 ## License
 

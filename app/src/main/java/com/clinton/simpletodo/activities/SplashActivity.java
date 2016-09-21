@@ -1,4 +1,4 @@
-package com.clinton.simpletodo;
+package com.clinton.simpletodo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,4 +14,5 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

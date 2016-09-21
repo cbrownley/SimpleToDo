@@ -1,4 +1,4 @@
-package com.clinton.simpletodo;
+package com.clinton.simpletodo.utils;
 
 
 import android.provider.BaseColumns;

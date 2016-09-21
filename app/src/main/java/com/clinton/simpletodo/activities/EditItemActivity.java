@@ -1,4 +1,4 @@
-package com.clinton.simpletodo;
+package com.clinton.simpletodo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.clinton.simpletodo.R;
 
 public class EditItemActivity extends AppCompatActivity {
 
